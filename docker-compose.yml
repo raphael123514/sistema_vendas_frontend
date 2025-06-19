@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_API_BASE_URL=http://laravel.test/api  # Usando o nome do serviço
+    networks:
+      - vendas-network
+
+networks:
+  vendas-network:
+    external: true
