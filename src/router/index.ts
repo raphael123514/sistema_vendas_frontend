@@ -34,4 +34,20 @@ const router = createRouter({
   ],
 })
 
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('auth_token')
+  const isLogin = to.name === 'login'
+  const isPublic = isLogin
+
+  if (!isPublic && !token) {
+    // Se não estiver autenticado e tentar acessar rota protegida, redireciona para login
+    next({ name: 'login' })
+  } else if (isLogin && token) {
+    // Se já estiver autenticado e tentar acessar login, redireciona para home
+    next({ name: 'home' })
+  } else {
+    next()
+  }
+})
+
 export default router
