@@ -6,14 +6,14 @@
         <ul :class="styles['sidebar-menu']">
             <li>
                 <RouterLink :to="'/home/vendedores'" :class="styles['sidebar-link']" active-class="active">
-                  <IconCommunity style="margin-right: 8px; vertical-align: middle;" />
-                  Vendedores
+                    <IconCommunity style="margin-right: 8px; vertical-align: middle;" />
+                    Vendedores
                 </RouterLink>
             </li>
             <li>
                 <RouterLink :to="'/home/vendas'" :class="styles['sidebar-link']" active-class="active">
-                  <IconDocumentation style="margin-right: 8px; vertical-align: middle;" />
-                  Vendas
+                    <IconDocumentation style="margin-right: 8px; vertical-align: middle;" />
+                    Vendas
                 </RouterLink>
             </li>
         </ul>
