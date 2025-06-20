@@ -30,7 +30,6 @@ import BaseTitle from '@/components/base/BaseTitle.vue'
 import BaseMessage from '@/components/base/BaseMessage.vue'
 import axios from 'axios'
 import { translateApiErrors } from '@/utils/translateErrors'
-import '@/assets/styles/vue-good-table-custom.css'
 
 const openModal = ref(false)
 const showSuccess = ref(false)

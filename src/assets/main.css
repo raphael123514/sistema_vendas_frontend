@@ -1,4 +1,5 @@
 @import './base.css';
+@import '@/assets/styles/vue-good-table-custom.css';
 
 :global(html),
 :global(body),
