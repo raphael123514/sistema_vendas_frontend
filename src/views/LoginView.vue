@@ -33,7 +33,7 @@ function login() {
             if (token) {
                 localStorage.setItem('auth_token', token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-                router.push('/home')
+                router.push('/')
             } else {
                 console.error('Token não encontrado na resposta do servidor')
             }
