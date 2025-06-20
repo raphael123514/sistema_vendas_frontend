@@ -5,15 +5,21 @@
         </div>
         <ul :class="styles['sidebar-menu']">
             <li>
-                <RouterLink :to="'/home/vendedores'" :class="styles['sidebar-link']" active-class="active">
-                    <IconCommunity style="margin-right: 8px; vertical-align: middle;" />
-                    Vendedores
+                <RouterLink :to="'/vendedores'" v-slot="{ isActive }">
+                    <span :class="[styles['sidebar-link'], isActive && styles['sidebar-link-active']]"
+                        style="text-decoration: none !important; box-shadow: none !important;">
+                        <IconCommunity style="margin-right: 8px; vertical-align: middle;" />
+                        Vendedores
+                    </span>
                 </RouterLink>
             </li>
             <li>
-                <RouterLink :to="'/home/vendas'" :class="styles['sidebar-link']" active-class="active">
-                    <IconDocumentation style="margin-right: 8px; vertical-align: middle;" />
-                    Vendas
+                <RouterLink :to="'/vendas'" v-slot="{ isActive }">
+                    <span :class="[styles['sidebar-link'], isActive && styles['sidebar-link-active']]"
+                        style="text-decoration: none !important; box-shadow: none !important;">
+                        <IconDocumentation style="margin-right: 8px; vertical-align: middle;" />
+                        Vendas
+                    </span>
                 </RouterLink>
             </li>
         </ul>

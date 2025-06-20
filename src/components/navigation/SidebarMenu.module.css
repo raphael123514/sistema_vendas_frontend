@@ -26,6 +26,10 @@
   flex-direction: column;
   gap: 1.5rem;
 }
+.sidebar-link, .sidebar-link *, .sidebar-link:visited, .sidebar-link:active, .sidebar-link:focus, .sidebar-link-active, .sidebar-link-active *, .sidebar-link span {
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
 .sidebar-link {
   color: #b5b5b5;
   text-decoration: none;
@@ -37,10 +41,9 @@
     color 0.2s;
   display: block;
 }
-.sidebar-link.active,
-.sidebar-link.router-link-exact-active {
-  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
-  color: #fff;
+.sidebar-link-active {
+  background: #232e4d !important;
+  color: #fff !important;
 }
 .sidebar-link:hover {
   background: #18181b;
