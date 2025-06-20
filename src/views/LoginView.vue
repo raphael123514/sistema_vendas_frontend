@@ -15,9 +15,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import styles from '@/assets/login.module.css'
-import BaseInput from '@/components/BaseInput.vue'
-import BaseButton from '@/components/BaseButton.vue'
+import styles from '@/assets/styles/login.module.css'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseButton from '@/components/base/BaseButton.vue'
 
 const email = ref('')
 const password = ref('')
@@ -29,13 +29,13 @@ function login() {
         password: password.value
     })
         .then(response => {
-            const token = response.data.token
+            const token = response.data.token || response.data.data?.token
             if (token) {
                 localStorage.setItem('auth_token', token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
                 router.push('/home')
             } else {
-                alert('Login falhou: token não recebido.')
+                console.error('Token não encontrado na resposta do servidor')
             }
         })
         .catch(error => {
