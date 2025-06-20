@@ -9,7 +9,7 @@ services:
       - ./:/app
       - /app/node_modules
     environment:
-      - VITE_API_BASE_URL=http://backend:8000/api
+      - API_HOST=app
     networks:
       - vendas-network
     command: npm run dev
