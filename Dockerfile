@@ -1,4 +1,13 @@
-# Estágio de construção
+# Estágio de desenvolvimento
+FROM node:18 as development-stage
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5173
+CMD ["npm", "run", "dev"]
+
+# Estágio de construção (build)
 FROM node:18 as build-stage
 WORKDIR /app
 COPY package*.json ./
