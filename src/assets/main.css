@@ -1,6 +1,8 @@
 @import './base.css';
 
-:global(html), :global(body), :global(#app) {
+:global(html),
+:global(body),
+:global(#app) {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -18,7 +20,11 @@
   padding: 0;
 }
 
-a, a:visited, a:active, a:focus, a * {
+a,
+a:visited,
+a:active,
+a:focus,
+a * {
   text-decoration: none !important;
   box-shadow: none !important;
 }
