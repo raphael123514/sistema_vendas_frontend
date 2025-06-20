@@ -1,6 +1,6 @@
 @import './base.css';
 
-:global(html, body, #app) {
+:global(html), :global(body), :global(#app) {
   height: 100%;
   margin: 0;
   padding: 0;
