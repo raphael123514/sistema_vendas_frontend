@@ -1,10 +1,16 @@
+version: '3.8'
+
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      target: ${BUILD_TARGET:-production-stage}
+    profiles: ["development", "production"]  # Adicione ambos os perfis
     ports:
-      - "8080:80"
+      - "${FRONTEND_PORT:-8080}:80"
     environment:
-      - VITE_API_BASE_URL=http://laravel.test/api  # Usando o nome do serviço
+      - VITE_API_BACKEND_HOST=${API_HOST:-backend}
+      - VITE_API_BACKEND_PORT=${API_PORT:-8000}
     networks:
       - vendas-network
 
