@@ -6,6 +6,10 @@ const errorMessagesPT: Record<string, string> = {
 const fieldNamesPT: Record<string, string> = {
   name: 'Nome',
   email: 'E-mail',
+  amount: 'Valor',
+  date: 'Data',
+  seller_id: 'Vendedor',
+
   // Adicione outros campos se necessário
 }
 
