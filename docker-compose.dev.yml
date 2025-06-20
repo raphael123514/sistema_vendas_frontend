@@ -9,7 +9,7 @@ services:
       - ./:/app
       - /app/node_modules
     environment:
-      - API_HOST=app
+      - API_HOST=${API_HOST}
     networks:
       - vendas-network
     command: npm run dev
