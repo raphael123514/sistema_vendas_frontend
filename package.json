@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:docker": "docker-compose --profile development up -d",
+    "dev:docker": "docker-compose -f docker-compose.dev.yml up -d",
     "build": "run-p type-check \"build-only {@}\" --",
-    "build:docker": "docker-compose --profile development --build",
+    "build:docker": "docker-compose up -d --build",
     "preview": "vite preview",
     "preview:docker": "docker-compose up",
     "test:unit": "vitest",
