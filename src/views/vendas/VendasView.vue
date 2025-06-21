@@ -6,15 +6,25 @@
         </BaseButton>
     </div>
 
-    <BaseMessage v-if="showSuccess" type="success" message="Venda cadastrada com sucesso!" :duration="5000"
+    <BaseMessage v-if="showSuccess" type="success" :message="messageSuccess" :duration="5000"
         @close="showSuccess = false" />
     <BaseMessage v-if="showError" type="error" :message="apiErrorMessage" :errors="apiErrors" :duration="5000"
         @close="showError = false" />
 
     <div class="container-entitys">
-        <div style="max-width: 350px; margin-bottom: 1.5rem;">
-            <BaseSelectSearch label="Filtrar por vendedor" v-model="vendedorSelecionado" :options="sellersOptions"
-                placeholder="Selecione um vendedor" clearable />
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;width: 100%;">
+            <div style="max-width: 350px; margin-bottom: 1.5rem; width: 100%;">
+                <BaseSelectSearch label="Filtrar por vendedor" v-model="vendedorSelecionado" :options="sellersOptions"
+                    placeholder="Selecione um vendedor" clearable />
+            </div>
+            <BaseWhiteButton
+                :disabled="!vendedorSelecionado"
+                @click="enviarRelatorio"
+                tooltip="Selecione um vendedor"
+            >
+                Enviar Relatório
+            </BaseWhiteButton>
+
         </div>
 
         <vue-good-table :columns="columns" :rows="vendas" :pagination-options="paginationOptions"
@@ -38,6 +48,7 @@ import BaseMessage from '@/components/base/BaseMessage.vue'
 import VendaModal from './VendaModal.vue'
 import IconDocumentation from '@/components/icons/IconDocumentation.vue'
 import BaseSelectSearch from '@/components/base/BaseSelectSearch.vue'
+import BaseWhiteButton from '@/components/base/BaseWhiteButton.vue'
 
 import { translateApiErrors } from '@/utils/translateErrors'
 import { useSellers } from '@/composables/useSellers'
@@ -45,6 +56,7 @@ import { useSellers } from '@/composables/useSellers'
 const openModal = ref(false)
 const showSuccess = ref(false)
 const showError = ref(false)
+const messageSuccess = ref('')
 const apiErrorMessage = ref('')
 const apiErrors = ref<Record<string, string[]>>({})
 const vendas = ref<{ venda: string; valor: string; vendedor: string }[]>([])
@@ -56,8 +68,6 @@ const totalItems = ref(0)
 const { sellersOptions, fetchSellers } = useSellers()
 
 const vendedorSelecionado = ref<string | null>(null)
-
-
 
 const columns = [
     {
@@ -148,6 +158,7 @@ async function handleSave(data: { date: string; amount: string; seller_id: BigIn
             apiErrorMessage.value = ''
             apiErrors.value = {}
             openModal.value = false
+            messageSuccess.value = 'Venda salva com sucesso!'
             fetchVendas()
         })
         .catch(error => {
@@ -158,6 +169,24 @@ async function handleSave(data: { date: string; amount: string; seller_id: BigIn
             apiErrors.value = translateApiErrors(error.response?.data?.errors || {})
             openModal.value = false
         })
+}
+
+async function enviarRelatorio() {
+  if (!vendedorSelecionado.value) return;
+  try {
+    const token = localStorage.getItem('auth_token')
+    await axios.post(`/sellers/${vendedorSelecionado.value}/resend-commission`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    showSuccess.value = true
+    apiErrorMessage.value = ''
+    showError.value = false
+    messageSuccess.value = 'Relatório enviado com sucesso, em instante você recebera o e-mail!'
+  } catch (e) {
+    showError.value = true
+    showSuccess.value = false
+    apiErrorMessage.value = 'Erro ao enviar relatório.'
+  }
 }
 
 function onPageChange(params: { currentPage: number }) {
