@@ -1,45 +1,94 @@
-# .
+# Sistema de Vendas Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Este projeto é um frontend em Vue 3 + Vite para o sistema de vendas.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Requisitos
 
-## Type Support for `.vue` Imports in TS
+- Node.js 18+
+- Docker e Docker Compose (recomendado para ambiente de produção e desenvolvimento)
+- Backend rodando e acessível (ver variável `API_HOST`)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+---
 
-## Customize configuration
+## Configuração de Ambiente
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Crie um arquivo `.env` na raiz do projeto com as variáveis necessárias. Exemplo:
 
-## Project Setup
+```env
+API_HOST=laravel.test
+BASE_URL=http://localhost:5173
+```
+
+- `API_HOST`: Host do backend Laravel (pode ser um hostname Docker ou IP).
+- `BASE_URL`: URL base do frontend (ajuste conforme necessário).
+
+---
+
+## Subindo o Projeto em Desenvolvimento
+
+O modo recomendado é via Docker Compose:
+
+```sh
+docker compose -f docker-compose.dev.yml up --build
+```
+
+- O frontend ficará disponível em [http://localhost:5173](http://localhost:5173)
+- O código-fonte é montado como volume, permitindo hot reload.
+
+Ou, se preferir rodar localmente (fora do Docker):
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+---
+
+## Subindo o Projeto em Produção
+
+Para build e servir em produção via Docker:
 
 ```sh
+docker compose up --build
+```
+
+- O frontend será servido na porta 8080 (ajuste no `docker-compose.yml` se necessário).
+
+Ou, para build local:
+
+```sh
+npm install
 npm run build
+# Sirva a pasta dist/ com um servidor estático de sua preferência
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+---
 
-```sh
-npm run test:unit
-```
+## Scripts Úteis
 
-### Lint with [ESLint](https://eslint.org/)
+- **Testes unitários:**
+  ```sh
+  npm run test:unit
+  ```
+- **Lint:**
+  ```sh
+  npm run lint
+  ```
 
-```sh
-npm run lint
-```
+- **Subir o docker com npm:**
+  ```sh
+  npm run dev:docker
+  ```
+
+---
+
+## Observações
+
+- Sempre ajuste as variáveis do `.env` conforme o ambiente (dev/prod).
+- O frontend espera que o backend esteja acessível pelo valor de `API_HOST`.
+- Para desenvolvimento, recomenda-se usar o Docker Compose para garantir compatibilidade de ambiente.
+- Se adicionar novas variáveis de ambiente, lembre-se de atualizar este README.
+
+---
