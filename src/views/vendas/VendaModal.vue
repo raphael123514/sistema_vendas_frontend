@@ -18,7 +18,7 @@ import BaseInput from '@/components/base/BaseInput.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import BaseSelectSearch from '@/components/base/BaseSelectSearch.vue'
-import axios from 'axios'
+import { useSellers } from '@/composables/useSellers'
 
 
 const emit = defineEmits(['close', 'save'])
@@ -26,19 +26,10 @@ const { open } = defineProps<{ open: boolean }>()
 const date = ref('')
 const amount = ref('')
 const seller = ref('')
-const sellersOptions = ref<{ label: string, value: string }[]>([])
+const { sellersOptions, fetchSellers } = useSellers()
 
-onMounted(async () => {
-    try {
-        const token = localStorage.getItem('auth_token')
-        const res = await axios.get('/sellers', { headers: { Authorization: `Bearer ${token}` } })
-        sellersOptions.value = (res.data.data || []).map((v: any) => ({
-            label: v.name,
-            value: v.id
-        }))
-    } catch (e) {
-        sellersOptions.value = []
-    }
+onMounted(() => {
+  fetchSellers()
 })
 
 function handleSubmit() {

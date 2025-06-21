@@ -24,7 +24,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.1rem;
 }
 .sidebar-link, .sidebar-link *, .sidebar-link:visited, .sidebar-link:active, .sidebar-link:focus, .sidebar-link-active, .sidebar-link-active *, .sidebar-link span {
   text-decoration: none !important;

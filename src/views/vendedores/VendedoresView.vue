@@ -13,10 +13,12 @@
         @close="showError = false" />
 
     <VendedorModal :open="openModal" @close="openModal = false" @save="handleSave" />
+    <div class="container-entitys">
+        <vue-good-table :columns="columns" :rows="sellers" :pagination-options="paginationOptions" :total-rows="totalItems"
+            :current-page="page" :per-page="perPage" :search-options="{ enabled: false }" :loading="loading"
+            v-on:page-change="onPageChange" v-on:per-page-change="onPerPageChange" />
 
-    <vue-good-table :columns="columns" :rows="sellers" :pagination-options="paginationOptions" :total-rows="totalItems"
-        :current-page="page" :per-page="perPage" :search-options="{ enabled: false }" :loading="loading"
-        v-on:page-change="onPageChange" v-on:per-page-change="onPerPageChange" />
+    </div>
 </template>
 
 <script setup lang="ts">

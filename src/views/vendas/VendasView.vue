@@ -6,29 +6,41 @@
         </BaseButton>
     </div>
 
-    <VendaModal :open="openModal" @close="openModal = false" @save="handleSave" />
-    
     <BaseMessage v-if="showSuccess" type="success" message="Venda cadastrada com sucesso!" :duration="5000"
         @close="showSuccess = false" />
-
     <BaseMessage v-if="showError" type="error" :message="apiErrorMessage" :errors="apiErrors" :duration="5000"
         @close="showError = false" />
+
+    <div class="container-entitys">
+        <div style="max-width: 350px; margin-bottom: 1.5rem;">
+            <BaseSelectSearch label="Filtrar por vendedor" v-model="vendedorSelecionado" :options="sellersOptions"
+                placeholder="Selecione um vendedor" clearable />
+        </div>
+
+        <vue-good-table :columns="columns" :rows="vendas" :pagination-options="paginationOptions"
+            :total-rows="totalItems" :current-page="page" :per-page="perPage" :loading="loading"
+            v-on:page-change="onPageChange" v-on:per-page-change="onPerPageChange" style="margin-top: 2rem;" />
+    </div>
+
+    <VendaModal :open="openModal" @close="openModal = false" @save="handleSave" />
     
-    <vue-good-table :columns="columns" :rows="vendas" :pagination-options="paginationOptions" :total-rows="totalItems"
-        :current-page="page" :per-page="perPage" :loading="loading" v-on:page-change="onPageChange" 
-        v-on:per-page-change="onPerPageChange" style="margin-top: 2rem;" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { VueGoodTable } from 'vue-good-table-next'
+import axios from 'axios'
+import moment from 'moment';
+
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseTitle from '@/components/base/BaseTitle.vue'
 import BaseMessage from '@/components/base/BaseMessage.vue'
 import VendaModal from './VendaModal.vue'
 import IconDocumentation from '@/components/icons/IconDocumentation.vue'
-import { VueGoodTable } from 'vue-good-table-next'
-import axios from 'axios'
+import BaseSelectSearch from '@/components/base/BaseSelectSearch.vue'
+
 import { translateApiErrors } from '@/utils/translateErrors'
+import { useSellers } from '@/composables/useSellers'
 
 const openModal = ref(false)
 const showSuccess = ref(false)
@@ -41,19 +53,35 @@ const page = ref(1)
 const perPage = ref(10)
 const totalItems = ref(0)
 
+const { sellersOptions, fetchSellers } = useSellers()
+
+const vendedorSelecionado = ref<string | null>(null)
+
+
+
 const columns = [
-    { 
-        label: 'Data', 
+    {
+        label: 'Data',
         field: 'date',
         formatFn: (value: string) => {
-            if (!value) return '';
-            const date = new Date(value);
-            return date.toLocaleDateString('pt-BR');
+            return value ? moment(value).format('DD/MM/YYYY') : '';
         }
     },
-    { label: 'Valor', field: 'amount' },
-    { label: 'Vendedor', field: 'sellerName' }
-]
+    { 
+        label: 'Valor', 
+        field: 'amount',
+        formatFn: (value: number) => {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+    },
+    { 
+        label: 'Vendedor', 
+        field: 'sellerName' 
+    }
+];
 
 const paginationOptions = computed(() => ({
     enabled: true,
@@ -74,10 +102,22 @@ async function fetchVendas() {
     loading.value = true
     try {
         const token = localStorage.getItem('auth_token')
-        const res = await axios.get('/sales', {
-            params: { page: page.value, per_page: perPage.value },
-            headers: { Authorization: `Bearer ${token}` }
-        })
+        const params: any = { page: page.value, per_page: perPage.value }
+        let res: any = {}
+
+        if (vendedorSelecionado.value) {
+            params.seller_id = vendedorSelecionado.value
+            res = await axios.get(`/sellers/${vendedorSelecionado.value}/sales`, {
+                params,
+                headers: { Authorization: `Bearer ${token}` }
+            })
+        } else {
+            res = await axios.get('/sales', {
+                params,
+                headers: { Authorization: `Bearer ${token}` }
+            })
+        }
+
         vendas.value = (res.data.data || []).map((v: any) => ({
             date: v.date,
             amount: v.amount,
@@ -99,7 +139,7 @@ async function fetchVendas() {
 
 async function handleSave(data: { date: string; amount: string; seller_id: BigInteger }) {
     const token = localStorage.getItem('auth_token')
-     axios.post('/sales', data, {
+    axios.post('/sales', data, {
         headers: { Authorization: `Bearer ${token}` }
     })
         .then(() => {
@@ -128,8 +168,11 @@ function onPerPageChange(params: { currentPerPage: number }) {
     page.value = 1
 }
 
-onMounted(fetchVendas)
-watch([page, perPage], fetchVendas)
+onMounted(() => {
+    fetchSellers()
+    fetchVendas()
+})
+watch([page, perPage, vendedorSelecionado], fetchVendas)
 </script>
 
 <style scoped>
@@ -147,5 +190,12 @@ watch([page, perPage], fetchVendas)
     align-items: center;
     gap: 0.4rem;
     width: fit-content;
+}
+.container-entitys{
+    background: #23232b;
+    border-radius: 1.2rem;
+    padding: 2rem 2.5rem 2.5rem 2.5rem;
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.10);
+    margin-bottom: 2rem;
 }
 </style>
